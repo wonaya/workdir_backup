@@ -1,0 +1,22 @@
+{
+    "jobName": "chipcompare-03",
+    "softwareName": "jawon-chipcompare-0.3",
+    "processorsPerNode": 16,
+    "requestedTime": "02:00:00",
+    "memoryPerNode": 32,
+    "nodeCount": 1,
+    "batchQueue": "normal",
+    "archive": true,
+    "archivePath": "",
+    "inputs": {
+        "input1": "agave://data.iplantcollaborative.org/shared/ncsu-plantreplication/public/Zeamays/B73_root/HistoneMarks/Z.mays_B73_AGPv3.23_root0-3mm_H3K27me3_ChIP_2C_calledpeaks_q0.01.broadPeak",
+        "input2": "agave://data.iplantcollaborative.org/shared/ncsu-plantreplication/public/Zeamays/B73_root/HistoneMarks/Z.mays_B73_AGPv3.23_root0-3mm_H3K4me3_ChIP_2C_calledpeaks_q0.01.broadPeak",
+        "mappable": "agave://data.iplantcollaborative.org/shared/ncsu-plantreplication/work/mappable/maize_chrOnly_Ns.bed",
+        "fai": "agave://data.iplantcollaborative.org/shared/ncsu-plantreplication/work/fai/Zea_mays.AGPv3.23_without_scaffold.fa.fai"
+    },
+    "parameters": {
+        "perm": 1000,
+        "max_macs": 100,
+        "min_macs": 50
+    }
+}

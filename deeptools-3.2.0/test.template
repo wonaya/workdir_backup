@@ -1,0 +1,60 @@
+set -x 
+
+#input
+bam1=${bam1}
+bam2=${bam2}
+bam3=${bam3}
+bam4=${bam4}
+bam5=${bam5}
+bam6=${bam6}
+bam7=${bam7}
+bam8=${bam8}
+bam9=${bam9}
+bam10=${bam10}
+
+#param
+bins=${bins}
+cormethod=${cormethod}
+log10=${log10}
+removeoutliers=${removeoutliers}
+
+module load biocontainers
+module load deeptools/ctr-3.2.0--py_0 samtools/ctr-1.9--h91753b0_5
+
+ARGS= ""
+ARGS="${ARGS} ${bam1} ${bam2} "
+if [ "${bam3}" != "" ]; then ARGS="${ARGS} ${bam3}"; fi
+if [ "${bam4}" != "" ]; then ARGS="${ARGS} ${bam4}"; fi
+if [ "${bam5}" != "" ]; then ARGS="${ARGS} ${bam5}"; fi
+if [ "${bam6}" != "" ]; then ARGS="${ARGS} ${bam6}"; fi
+if [ "${bam7}" != "" ]; then ARGS="${ARGS} ${bam7}"; fi
+if [ "${bam8}" != "" ]; then ARGS="${ARGS} ${bam8}"; fi
+if [ "${bam9}" != "" ]; then ARGS="${ARGS} ${bam9}"; fi
+if [ "${bam10}" != "" ]; then ARGS="${ARGS} ${bam10}"; fi
+
+echo ${ARGS}
+
+for x in $(ls $ARGS) ;
+do samtools sort  -@ 68 -m 1G $x -o $x.sorted.bam ; mv $x.sorted.bam $x ; samtools index $x ;
+done
+
+ARGS2=""
+ARGS2="${ARGS2} --numberOfProcessors 32 -bs ${bins} -b ${ARGS} -out multibam.npz"
+
+echo ${ARGS2}
+
+# Run the actual program
+multiBamSummary bins ${ARGS2}
+
+ARGS3=""
+ARGS3="${ARGS3} --corMethod ${cormethod} "
+
+if [ "${log10}" == "1" ]; then ARGS3="${ARGS3} --log10 "; fi
+if [ "${removeoutliers}" == "1" ]; then ARGS3="${ARGS3} --removeOutliers "; fi
+
+echo ${ARGS3}
+
+plotCorrelation --corData multibam.npz --plotFile multibam_heatmap.png --outFileCorMatrix multibam.tab --whatToPlot heatmap ${ARGS3}
+plotCorrelation --corData multibam.npz --plotFile multibam_scatter.png --whatToPlot scatterplot ${ARGS3}
+
+rm -Rf *bam *bai

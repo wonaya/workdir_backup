@@ -1,0 +1,33 @@
+#input
+INPUT1=${INPUT1}
+INPUT2=${INPUT2}
+cp ${INPUT1} static.broadPeak
+cp ${INPUT2} test.broadPeak
+#mappable
+MAPPABLE=${MAPPABLE}
+#fai
+FAI=${FAI}
+#no. of permutation cycles
+PERM=${PERM}
+MAX_MACS=${MAX_MACS}
+MIN_MACS=${MIN_MACS}
+
+# Unpack the bin.tgz file containing python scripts
+ 
+module load bedtools
+
+#INPUT1_F=$(basename ${INPUT1})
+#INPUT2_F=$(basename ${INPUT2})
+INPUT1_F=static.broadPeak
+INPUT2_F=test.broadPeak
+MAPPABLE_F=$(basename ${MAPPABLE})
+FAI_F=$(basename ${FAI})
+
+# Build up an ARGS string for the program
+ARGS="--permutate_n $PERM --max_macs $MAX_MACS --min_macs $MIN_MACS"
+# Boolean handler for -named
+#if [ ${unique_out} == 1 ]; then ARGS="${ARGS} --unique_out "; fi
+ 
+# Run the actual program
+python chipcompare-0.3.py --test_1 ${INPUT1_F} --test_2 ${INPUT2_F} --Ncoord ${MAPPABLE_F} --fai ${FAI_F} ${ARGS}
+rm ${MAPPABLE_F} ${FAI_F}

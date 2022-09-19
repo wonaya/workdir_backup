@@ -1,0 +1,57 @@
+#input
+reference=${reference}
+bamtxt=${bamtxt}
+bamdir=${bamdir}
+
+#params
+smoothing=${smoothing}
+window=${window}
+aggregate=${aggregate}
+#norm=${norm}
+threshold=${threshold}
+scope=${scope}
+value=${value}
+percent=${percent}
+classifier=${classifier}
+remove=${remove}
+log=${log}
+plot=${plot}
+pcut=${pcut}
+blacklist=${blacklist}
+output="repliscan_output"
+
+module purge
+module load TACC
+module load biocontainers
+
+wget https://raw.githubusercontent.com/wonaya/repliscan/master/repliscan_removing_blacklist_test.py
+chmod 777 samtools wavelets bedtools repliscan_removing_blacklist_test.py
+export PATH=$PWD:$PATH
+
+ARGS=""
+# Build up an ARGS string for the program
+if [ "${smoothing}" != ""  ] ; then ARGS="${ARGS} -l ${smoothing} "; fi
+if [ "${window}" != "" ] ; then ARGS="${ARGS} -w ${window} " ; fi
+if [ "${aggregate}" != "" ]; then ARGS="${ARGS} -a ${aggregate} "; fi
+#if [ "${norm}" != ""   ]; then ARGS="${ARGS} -r ${read2} "; fi
+if [ "${threshold}"  != "" ]; then ARGS="${ARGS} -t ${threshold} " ; fi
+if [ "${scope}" != "" ]; then ARGS="${ARGS} -S ${scope} " ; fi
+if [ "${value}" != "" ] ; then ARGS="${ARGS} -v ${value} " ; fi
+if [ "${percent}" != "" ] ; then ARGS="${ARGS} --prep ${percent} " ; fi
+if [ "${pcut}" != "" ] ; then ARGS="${ARGS} --pcut ${pcut} " ; fi
+if [ "${classifier}" != "" ] ; then ARGS="${ARGS} -c ${classifier} " ; fi
+if [ "${remove}" != "" ] ; then ARGS="${ARGS} -R ${remove} " ; fi
+
+if [ "${log}" != 0 ] ; then ARGS="${ARGS} --log "; fi
+if [ "${plot}" != 0 ] ; then ARGS="${ARGS} --plot "; fi
+if [ "${blacklist}" != 0 ] ; then ARGS="${ARGS} --blacklist "; fi
+
+echo ${ARGS}
+echo $bamdir 
+for x in $(ls ${bamdir}/*.bam) ; do cp ${x} $PWD ; done
+
+
+# Run the actual program
+echo "repliscan_removing_blacklist_test.py ${ARGS} -r ${reference} ${bamtxt}"
+repliscan_removing_blacklist_test.py ${ARGS} -r ${reference} ${bamtxt}
+rm -Rf samtools bedtools repliscan_removing_blacklist_test.py ${reference} ${bamdir} ${bamtxt} *.bam ${reference}.fai

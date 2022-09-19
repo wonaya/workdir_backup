@@ -1,0 +1,52 @@
+#input
+ot1=${ot1}
+ot2=${ot2}
+ctot1=${ctot1}
+ctot2=${ctot2}
+ob1=${ob1}
+ob2=${ob2}
+ctob1=${ctob1}
+ctob2=${ctob2}
+genome=${genome}
+
+#parameters
+context=${context}
+qvalue=${qvalue}
+specie=${specie}
+input1=${input1}
+input2=${input2}
+dmc=${dmc}
+cpg=${cpg}
+diffmeth=${diffmeth}
+
+module purge
+module load TACC
+module load python/2.7.12
+tar -zxf R-2.15.1.tar.gz
+export LD_LIBRARY_PATH="$PWD/R-2.15.1/lib64/R/lib/:$LD_LIBRARY_PATH"
+export PATH="$PWD/R-2.15.1/bin/:$PATH"
+export R_HOME="$PWD/R-2.15.1/lib64/R"
+tar -zxf lib.tar.gz
+tar -zxf R.tar.gz
+
+export PYTHONPATH="$PWD/lib/python:/opt/apps/intel16/python/2.7.12/lib/python2.7/site-packages"
+export R_LIBS="$PWD/lib/tempRlibs:$R_LIBS"
+
+OT1_F=$(basename ${ot1})
+OT2_F=$(basename ${ot2})
+OB1_F=$(basename ${ob1})
+OB2_F=$(basename ${ob2})
+GENOME_F=$(basename ${genome})
+
+# Build up an ARGS string for the program
+ARGS="--qvalue $qvalue --dmc $dmc --cpg $cpg --diffmeth $diffmeth --cores 16 --specie $specie --context $context --name1 $input1 --name2 $input2"
+if [[ $ctot1 = *[!\ ]* ]]; then CTOT1_F=$(basename ${ctot1}) ; ARGS="${ARGS} --ctot1 ${CTOT1_F} "; fi
+if [[ $ctot2 = *[!\ ]* ]]; then CTOT2_F=$(basename ${ctot2}) ; ARGS="${ARGS} --ctot2 ${CTOT2_F} "; fi
+if [[ $ctob1 = *[!\ ]* ]]; then CTOB1_F=$(basename ${ctob1}) ; ARGS="${ARGS} --ctob1 ${CTOB1_F} "; fi
+if [[ $ctob2 = *[!\ ]* ]]; then CTOB2_F=$(basename ${ctob2}) ; ARGS="${ARGS} --ctob2 ${CTOB2_F} "; fi
+ 
+# Run the actual program
+echo "python bisukit.py --ot1 ${OT1_F} --ot2 ${OT2_F} --ob1 ${OB1_F} --ob2 ${OB2_F} --genome ${GENOME_F} --qvalue $qvalue --dmc $dmc --cpg $cpg --diffmeth $diffmeth --cores 16 --specie $specie --context $context --name1 $input1 --name2 $input2"
+python bisukit.py --ot1 ${OT1_F} --ot2 ${OT2_F} --ob1 ${OB1_F} --ob2 ${OB2_F} --genome ${GENOME_F} --qvalue $qvalue --dmc $dmc --cpg $cpg --diffmeth $diffmeth --cores 24 --specie $specie --context $context --name1 $input1 --name2 $input2
+
+rm -Rf lib R R-2.15.1

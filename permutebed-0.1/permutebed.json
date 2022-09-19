@@ -1,0 +1,151 @@
+{
+    "available": true,
+    "checkpointable": false,
+    "defaultMemoryPerNode": 32,
+    "defaultProcessorsPerNode": 16,
+    "defaultMaxRunTime": "08:00:00",
+    "defaultNodeCount": 1,
+    "defaultQueue": "normal",
+    "deploymentPath": "jawon/applications/permutebed-0.1",
+    "deploymentSystem": "data.iplantcollaborative.org",
+    "executionSystem": "tacc-stampede2-wonaya",
+    "executionType": "HPC",
+    "helpURI": "https://github.com/wonaya/genomic_tools",
+    "label": "permutebed",
+    "longDescription": "",
+    "modules": [],
+    "name": "jawon-permutebed",
+    "ontology": [
+        "http://sswapmeet.sswap.info/agave/apps/Application"
+    ],
+    "parallelism": "SERIAL",
+    "shortDescription": "Generate empirical p-value for two overlapping ChIP datasets",
+    "tags": [
+        "ChIP",
+        "NGS",
+        "bedGraph"
+    ],
+    "templatePath": "test.template",
+    "testPath": "test_permutebed.sh",
+    "version": "0.1",
+    "inputs": [
+        {
+            "id": "input1",
+            "value": {
+                "default": "input1.broadPeak",
+                "order": 0,
+                "required": true,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bed"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "description": "",
+                "label": "Non-permuted broadPeak",
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "input2",
+            "value": {
+                "default": "input2.broadPeak",
+                "order": 0,
+                "required": true,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bed"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "description": "",
+                "label": "Permuated broadPeak",
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "mappable",
+            "value": {
+                "default": "test.bed",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bed"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "description": "",
+                "label": "Non-mappable regions of genome",
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "fai",
+            "value": {
+                "default": "genome.fa.fai",
+                "order": 0,
+                "required": true,
+                "validator": "([^\\s]+(\\.(?i)(fai))$)",
+                "visible": true
+            },
+            "semantics": {
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "description": "",
+                "label": "Genome fasta index",
+                "argument": null,
+                "showArgument": false
+            }
+        }
+    ],
+    "parameters": [
+        {
+            "id": "perm",
+            "value": {
+                "default": 1000,
+                "order": 1,
+                "required": false,
+                "type": "number",
+                "validator": "",
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "xs:integer"
+                ]
+            },
+            "details": {
+                "description": null,
+                "label": "number of permutation cycles to run",
+                "argument": "--permutate_n ",
+                "showArgument": false
+            }
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+#input
+INPUT1=${INPUT1}
+INPUT2=${INPUT2}
+#mappable
+MAPPABLE=${MAPPABLE}
+#fai
+FAI=${FAI}
+#no. of permutation cycles
+PERM=${PERM}
+
+# Unpack the bin.tgz file containing python scripts
+chmod 777 bedtools intersectBed shuffleBed
+export PATH=$PWD:$PATH
+ 
+# Build up an ARGS string for the program
+
+ARGS="--permutate_n $PERM "
+# Boolean handler for -named
+if [ ${MAPPABLE} != 0 ]; then ARGS="${ARGS} --Ncoord ${MAPPABLE} "; fi
+if [ "${EXCLBED_F}" != "" ]; then ARGS="${ARGS} --excl ${EXCLBED_F} "; fi
+echo "python chipcompare-0.3.py --test_1 ${INPUT1_F} --test_2 ${INPUT2_F} --fai ${FAI_F} ${ARGS}"
+# Run the actual program
+# python chipcompare-0.3.py --test_1 ${INPUT1_F} --test_2 ${INPUT2_F} --fai ${FAI_F} ${ARGS}
+#
+ 
+# Run the actual program
+python chipcompare-0.3.py --test_1 ${INPUT1} --test_2 ${INPUT2} --fai ${FAI} ${ARGS}
+
+rm -Rf ${INPUT1} ${INPUT2} ${FAI} bedtools intersectBed shuffleBed

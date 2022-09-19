@@ -1,0 +1,334 @@
+{
+    "available": true,
+    "checkpointable": false,
+    "defaultMaxRunTime": "48:00:00",
+    "defaultQueue": "normal",
+    "deploymentPath": "jawon/applications/deeptools-3.2.0",
+    "deploymentSystem": "data.iplantcollaborative.org",
+    "executionSystem": "tacc-stampede2-wonaya",
+    "executionType": "HPC",
+    "helpURI": "https://github.com/fidelram/deepTools",
+    "label": "deeptools",
+    "longDescription": "",
+    "modules": [],
+    "name": "jawon-deeptools",
+    "ontology": [
+        "http://sswapmeet.sswap.info/agave/apps/Application"
+    ],
+    "parallelism": "SERIAL",
+    "shortDescription": "Correlate different BAM files",
+    "tags": [
+        "bam",
+        "correlation"
+    ],
+    "ontology": [
+        "http://edamontology.org/operation_0449",
+        "http://edamontology.org/topic_3053",
+        "http://sswapmeet.sswap.info/iplant/apps/Application"
+    ],
+    "templatePath": "test.template",
+    "testPath": "test.sh",
+    "version": "3.2.0",
+    "inputs": [
+        {
+            "id": "bam1",
+            "value": {
+                "default": "1.bam",
+                "order": 0,
+                "required": true,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam2",
+            "value": {
+                "default": "2.bam",
+                "order": 0,
+                "required": true,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam3",
+            "value": {
+                "default": "3.bam",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam4",
+            "value": {
+                "default": "4.bam",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam5",
+            "value": {
+                "default": "5.bam",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam6",
+            "value": {
+                "default": "6.bam",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam7",
+            "value": {
+                "default": "7.bam",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam8",
+            "value": {
+                "default": "8.bam",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam9",
+            "value": {
+                "default": "9.bam",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        },
+        {
+            "id": "bam10",
+            "value": {
+                "default": "10.bam",
+                "order": 0,
+                "required": false,
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "http://sswapmeet.sswap.info/mime/application/X-bam"
+                ],
+                "minCardinality": 1,
+                "fileTypes": [
+                    "raw-0"
+                ]
+            },
+            "details": {
+                "argument": null,
+                "showArgument": false
+            }
+        }
+    ],
+    "parameters": [
+        {
+            "id": "bins",
+            "value": {
+                "order": 1,
+                "required": true,
+                "type": "number",
+                "validator": "",
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "xs:integer"
+                ]
+            },
+            "details": {
+                "description": "Bin size for calculating no. of reads",
+                "argument": "-bs ",
+                "showArgument": false
+            }
+        },
+        {
+            "id": "removeoutliers",
+            "value": {
+                "default": false,
+                "order": 1,
+                "required": false,
+                "type": "bool",
+                "validator": "",
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "xs:boolean"
+                ]
+            },
+            "details": {
+                "description": "Remove outliers in calculating correlation" ,
+                "argument": "--removeOutliers ",
+                "showArgument": false
+            }
+        },
+        {
+            "id": "log10",
+            "value": {
+                "default": false,
+                "order": 1,
+                "required": false,
+                "type": "bool",
+                "validator": "",
+                "visible": true
+            },
+            "semantics": {
+                "ontology": [
+                    "xs:boolean"
+                ]
+            },
+            "details": {
+                "description": "Log10 on all values" ,
+                "argument": "--log10 ",
+                "showArgument": false
+            }
+        },
+        {
+            "id": "cormethod",
+            "value": {
+                "order": 1,
+                "required": true,
+                "type": "enumeration",
+                "enum_values" : [ {
+                    "pearson" : "pearson"
+                }, {
+                    "spearman" : "spearman"
+                } ]
+            },
+            "details": {
+                "description": "Spearman or Pearson correlation",
+                "label": "Correlation type",
+                "argument": "--corMethod ",
+                "showArgument": false
+            }
+        }
+    ]
+}

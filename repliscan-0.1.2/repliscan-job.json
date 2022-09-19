@@ -1,0 +1,20 @@
+{
+    "name": "jawon-repliscan-0.1.1",
+    "appId": "jawon-repliscan-0.1.1",
+    "processorsPerNode": 64,
+    "maxRunTime" : "04:00:00",
+    "nodeCount": 1,
+    "batchQueue": "flat-quadrant",
+    "archive": false,
+    "archivePath": "",
+    "inputs" : {
+    	"reference" : "agave://data.iplantcollaborative.org/shared/ncsu-plantreplication/work/References/maize/AGPv5.0/Zm-B73-REFERENCE-NAM-5.0_without_scaffold.fa",
+    	"bamtxt" : "agave://data.iplantcollaborative.org/jawon/analyses/repliscan_bl/input.txt",
+	"bamdir" : "agave://data.iplantcollaborative.org/jawon/analyses/repliscan_bl/"
+    },
+    "parameters": {
+        "smoothing": 3,
+	"blacklist": true,
+	"plot": true
+    }
+}

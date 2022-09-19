@@ -1,0 +1,28 @@
+{
+    "jobName": "bisukit-agave_test",
+    "softwareName": "jawon-bisukit-0.1.3",
+    "processorsPerNode": 16,
+    "requestedTime": "00:10:00",
+    "memoryPerNode": 32,
+    "nodeCount": 24,
+    "batchQueue": "normal",
+    "archive": true,
+    "archivePath": "",
+    "inputs": {
+        "ot1": "agave://data.iplantcollaborative.org/jawon/API_test/CpG_OT_sample1.txt",
+        "ot2": "agave://data.iplantcollaborative.org/jawon/API_test/CpG_OT_sample2.txt",
+        "ob1": "agave://data.iplantcollaborative.org/jawon/API_test/CpG_OB_sample1.txt",
+        "ob2": "agave://data.iplantcollaborative.org/jawon/API_test/CpG_OB_sample2.txt",
+        "genome": "agave://data.iplantcollaborative.org/jawon/API_test/TAIR_4.fa"
+    },
+    "parameters": {
+        "input1": "sample1",
+        "input2": "sample2",
+        "context": "CpG",
+        "qvalue": 0.01,
+        "specie": "TAIR",
+        "dmc": "1",
+        "cpg": "3",
+        "diffmeth": "20"
+    }
+}

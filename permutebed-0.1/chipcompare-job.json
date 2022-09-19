@@ -1,0 +1,19 @@
+{
+    "jobName": "permutebed-03",
+    "softwareName": "jawon-permutebed-0.1",
+    "processorsPerNode": 16,
+    "requestedTime": "02:00:00",
+    "memoryPerNode": 32,
+    "nodeCount": 1,
+    "batchQueue": "normal",
+    "archive": true,
+    "archivePath": "",
+    "inputs": {
+        "input1": "agave://data.iplantcollaborative.org/jawon/API_test/K27_4C.broadPeak",
+        "input2": "agave://data.iplantcollaborative.org/jawon/API_test/K4_2C.broadPeak",
+        "fai": "agave://data.iplantcollaborative.org/shared/ncsu-plantreplication/work/fai/Zea_mays.AGPv3.23_without_scaffold.fa.fai"
+    },
+    "parameters": {
+        "perm": 1000
+    }
+}

@@ -1,0 +1,343 @@
+{
+	"available": true,
+	"checkpointable": false,
+	"defaultMemoryPerNode": 32,
+	"defaultProcessorsPerNode": 16,
+	"defaultMaxRunTime": "05:00:00",
+	"defaultNodeCount": 1,
+	"defaultQueue": "flat-quadrant",
+	"deploymentPath": "jawon/applications/repliscan-0.1.2",
+	"deploymentSystem": "data.iplantcollaborative.org",
+	"executionSystem": "tacc-stampede2-wonaya",
+	"executionType": "HPC",
+	"helpURI": "https://github.com/wonaya/repliscan",
+	"label": "repliscan",
+	"longDescription": "",
+	"modules": [],
+	"name": "jawon-repliscan",
+	"ontology": [
+		"http://sswapmeet.sswap.info/agave/apps/Application"
+	],
+	"parallelism": "SERIAL",
+	"shortDescription": "Pipeline for calculating Repli-seq enrichment and classifying the time replication took place",
+	"tags": [
+		"Replication",
+		"bedGraph",
+		"alignment"
+	],
+	"templatePath": "test.template",
+	"testPath": "test.sh",
+	"version": "0.1.2",
+	"inputs": [{
+			"id": "reference",
+			"value": {
+				"default": "reference.fasta",
+				"order": 0,
+				"required": true,
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"http://sswapmeet.sswap.info/mime/application/X-fasta"
+				],
+				"minCardinality": 1,
+				"fileTypes": [
+					"raw-0"
+				]
+			},
+			"details": {
+				"description": "Reference genome sequence file downloaded from database such as UCSC",
+				"label": "Reference genome in Fasta format",
+				"argument": null,
+				"showArgument": false
+			}
+		},
+		{
+			"id": "bamtxt",
+			"value": {
+				"default": "input.txt",
+				"order": 0,
+				"required": true,
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"http://sswapmeet.sswap.info/mime/application/X-txt"
+				],
+				"minCardinality": 1,
+				"fileTypes": [
+					"raw-0"
+				]
+			},
+			"details": {
+				"description": "File with list of bams",
+				"label": "File with list of bams",
+				"argument": null,
+				"showArgument": false
+			}
+		},
+                {
+                        "id": "bamdir",
+                        "value": {
+                                "default": "",
+                                "order": 0,
+                                "required": true,
+                                "visible": true
+                        },
+                        "semantics": {
+                                "ontology": [
+                                        "http://sswapmeet.sswap.info/mime/application/X-dir"
+                                ],
+                                "minCardinality": 1,
+                                "fileTypes": [
+                                        "raw-0"
+                                ]
+                        },
+                        "details": {
+                                "description": "Directory containing bams",
+                                "label": "Directory with bam files",
+                                "argument": null,
+                                "showArgument": false
+                        }
+                }
+	],
+	"parameters": [{
+			"id": "smoothing",
+			"value": {
+				"order": 1,
+				"required": false,
+				"type": "number",
+				"validator": "",
+				"default": 3,
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:integer"
+				]
+			},
+			"details": {
+				"description": "Haar smoothing level (Default: 3)",
+				"label": "Haar smoothing level",
+				"argument": "-l ",
+				"showArgument": false
+			}
+		},
+		{
+			"id": "window",
+			"value": {
+				"default": 1000,
+				"order": 1,
+				"required": false,
+				"type": "number",
+				"validator": "",
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:integer"
+				]
+			},
+			"details": {
+				"description": "Analysis bin size in base pairs (Default: 1000)",
+				"label": "Analysis bin size in base pairs (Default: 1000)",
+				"argument": "-w ",
+				"showArgument": false
+			}
+		},
+		{
+			"id": "aggregate",
+			"value": {
+				"default": "sum",
+				"required": false,
+				"type": "enumeration",
+				"enumValues": ["sum", "median", "mean", "min", "max"],
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:string"
+				]
+			},
+			"details": {
+				"description": "Replicate agregation method (Default: sum)"
+			}
+		},
+		{
+			"id": "threshold",
+			"value": {
+				"default": "auto",
+				"type": "enumeration",
+				"enumValues": ["value", "auto", "percent"],
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:string"
+				]
+			},
+			"details": {
+				"description": "Replication threshold method (Default: auto)",
+				"showArgument": false
+			}
+		},
+		{
+			"id": "scope",
+			"value": {
+				"default": "chromosome",
+				"type": "enumeration",
+				"enumValues": ["chromosome", "genome"],
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:string"
+				]
+			},
+			"details": {
+				"description": "Replication scope (Default: chromosome)",
+				"showArgument": false
+			}
+		},
+		{
+			"id": "value",
+			"value": {
+				"default": 1.0,
+				"type": "number",
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:float"
+				]
+			},
+			"details": {
+				"description": "Explicit replication threshold value [1.0] when Only using -t value (Default: 1.0)",
+				"showArgument": false
+			}
+		},
+		{
+			"id": "percent",
+			"value": {
+				"default": 2.0,
+				"type": "number",
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:float"
+				]
+			},
+			"details": {
+				"description": "Remove the lowest [2.0]% of singal as noise when Only using -t percent (Default: 2.0)",
+				"showArgument": false
+			}
+		},
+                {
+                        "id": "pcut",
+                        "value": {
+                                "default": "2.5-97.5",
+                                "type": "string",
+                                "visible": true
+                        },
+                        "semantics": {
+                                "ontology": [
+                                        "xs:string"
+                                ]
+                        },
+                        "details": {
+                                "description": "Removes data beyond the [%(default)s]%% of the data in each '-R' distribution when Only using -R percentile (Default: 2.5-97.5)",
+                                "showArgument": false,
+                                "label": "percentil cutoff"
+                        }
+                },
+
+		{
+			"id": "classifier",
+			"value": {
+				"default": "proportion",
+				"type": "enumeration",
+				"enumValues": ["binary", "proportion"],
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:string"
+				]
+			},
+			"details": {
+				"description": "Segmentation classification method (binary|proportion) (Default: proportion)",
+				"showArgument": false
+			}
+		},
+		{
+			"id": "remove",
+			"value": {
+				"default": "norm",
+				"type": "enumeration",
+				"enumValues": ["none", "lognGamma", "sqrtGamma", "norm", "whiskers","percentile"],
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:string"
+				]
+			},
+			"details": {
+				"description": "Outlying data to remove (Default: norm) -R ",
+				"showArgument": false
+			}
+		},
+		{
+			"id": "log",
+			"value": {
+				"default": false,
+				"type": "bool",
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:boolean"
+				]
+			},
+			"details": {
+				"description": "Apply log transform to sequenceability ratio (Default: false)",
+				"showArgument": false
+			}
+		},
+		{
+			"id": "plot",
+			"value": {
+				"default": false,
+				"type": "bool",
+				"visible": true
+			},
+			"semantics": {
+				"ontology": [
+					"xs:boolean"
+				]
+			},
+			"details": {
+				"description": "Plot statistics (Default: false)",
+				"showArgument": false
+			}
+		},
+                {
+                        "id": "blacklist",
+                        "value": {
+                                "default": false,
+                                "type": "bool",
+                                "visible": true
+                        },
+                        "semantics": {
+                                "ontology": [
+                                        "xs:boolean"
+                                ]
+                        },
+                        "details": {
+                                "description": "Remove blacklist region defined by G1 norm (Default: false)",
+                                "showArgument": false
+                        }
+                }
+	]
+}

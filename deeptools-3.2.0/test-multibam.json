@@ -1,0 +1,15 @@
+{
+    "name": "deeptools-test",
+    "appId": "jawon-deeptools-3.2.0",
+    "archive": false,
+    "inputs" : {
+    	"bam1" : "agave://data.iplantcollaborative.org/shared/iplantcollaborative/example_data/samtools_mapping_stats/sample_1.bam",
+    	"bam2" : "agave://data.iplantcollaborative.org/shared/iplantcollaborative/example_data/samtools_mapping_stats/sample_2.bam"
+    },
+    "parameters": {
+        "bins" : 1000,
+        "removeoutliers" : true,
+        "log10" : false,
+        "cormethod" : "pearson"
+    }
+}

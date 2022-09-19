@@ -1,0 +1,56 @@
+#!/bin/bash
+#SBATCH -J pipeline      # Job Name
+#SBATCH -o pipeline.o%j    # Output and error file name (%j expands to jobID)
+#SBATCH -N 1
+#SBATCH -n 1     # Total number of mpi tasks requested
+#SBATCH -p normal        # Queue (partition) name -- normal, development, etc.
+#SBATCH -t 48:00:00      # Run time (hh:mm:ss) - 1.5 hours
+#SBATCH -A OTH21160     # Project_name
+#SBATCH --mail-user=jawon@tacc.utexas.edu
+#SBATCH --mail-type=all
+
+read1=BR1_EU_contol_S1_L004_R1_001.fastq
+read2=BR1_EU_contol_S1_L004_R2_001.fastq
+genomedir=/work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/STAR_GTF/
+
+ml python3
+ml biocontainers 
+ml samtools
+ml trim-galore
+ml sortmerna
+ml star
+ml fastqc
+ml umi_tools
+ml bedtools
+
+#fastqc -t 96 $read1 ; fastqc -t 96 $read2
+# fastqc_export
+trim_galore -q 20 --paired $read1 $read2
+
+# SORTMERNA
+bash ./merge-paired-reads.sh ${read1%.fastq}_val_1.fq ${read2%.fastq}_val_2.fq merge.fq
+sortmerna --ref /work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/rRNA_db/rfam-5.8s-database-id98.zea_mays2.fasta,/work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/rRNA_db/index/rfam-5.8s-mays-db:/work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/rRNA_db/silva-bac-23s-id98.zea_mays2.fasta,/work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/rRNA_db/index/silva-bac-23s-db:/work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/rRNA_db/silva-euk-18s-id95.zea_mays2.fasta,/work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/rRNA_db/index/silva-euk-18s-db:/work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/rRNA_db/silva-euk-28s-id98.zea_mays2.fasta,/work2/02114/wonaya/genome/maize/Zea_mays.AGPv5/rRNA_db/index/silva-euk-28s-db --reads merge.fq -a 96 --aligned rnamapped.fq --num_alignments 1 --fastx --paired_out --other rnafree --log -v --blast 1
+bash ./unmerge-paired-reads.sh rnafree.fq ${read1%.fastq}_rnafree.fq ${read2%.fastq}_rnafree.fq
+
+#STAR
+/work/02114/wonaya/software/STAR/bin/Linux_x86_64/STAR --runThreadN 24 --genomeDir $genomedir --readFilesIn ${read1%.fastq}_rnafree.fq ${read2%.fastq}_rnafree.fq --outFileNamePrefix rnafreealigned.sam
+samtools view -@ 96 -q 10 -bS rnafreealigned.samAligned.out.sam | samtools view -bF 0x104 -@ 96 - | samtools view -bf 0x2 -@ 96- | samtools view -bF 0x800 -@ 96 - | samtools sort -@ 96 - > rnafree.filtered.bam
+samtools index -@ 96 rnafree.filtered.bam
+
+#UMITOOLS
+umi_tools dedup -I rnafree.filtered.bam --output-stats=rnafree.dedup.txt -S rnafree.dedup.bam --umi-separator=":" --paired
+samtools sort -@ 96 -n rnafree.dedup.bam > rnafree.dedup.bam.n
+bamToFastq -i rnafree.dedup.bam.n -fq rnafree.dedup_R1.fq -fq2 rnafree.dedup_R2.fq
+
+#TOPHAT consensus rRNA
+singularity pull tophat2.sif docker://genomicpariscentre/tophat2
+singularity exec tophat2.sif tophat -p 24 -o 45SrRNAtRNAremoved --no-novel-juncs /work2/02114/wonaya/genome/maize/Zea_mays.AGPv4.33/tRNA5S45S rnafree.dedup_R1.fq rnafree.dedup_R2.fq 
+mv 45SrRNAtRNAremoved/unmapped.bam .
+samtools sort -@ 96 -n unmapped.bam | samtools fixmate -@ 96 - unmapped_fixed.bam
+samtools sort -@ 96 unmapped_fixed.bam > unmapped_fixed_sort.bam
+bedtools bamtofastq -i unmapped_fixed_sort.bam -fq unmap_1.fq -fq2 unmap_2.fq
+
+STAR --runThreadN 24 --genomeDir $genomedir --readFilesIn unmap_1.fq unmap_2.fq --outFileNamePrefix rmrRNA_remap
+samtools view -@ 96  -bS rmrRNA_remapAligned.out.sam | samtools sort -@ 96 - > rmrRNA_remapAligned.sort.bam
+
+rm -Rf tophat2.sif 
