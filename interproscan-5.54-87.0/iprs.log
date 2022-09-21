@@ -1,0 +1,2 @@
+Seq	Host	Starttime	JobRuntime	Send	Receive	Exitval	Signal	Command
+1	:	1658409650.939	   649.678	0	22508	231	0	/opt/interproscan/interproscan.sh -i /data/split/query.0 -d /data/outdir_10000 -d outdir_10000 -f tsv,json,xml,gff3 -goterms

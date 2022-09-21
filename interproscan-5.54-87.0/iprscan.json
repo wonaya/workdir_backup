@@ -1,0 +1,225 @@
+{
+  "name": "jawon-Interproscan",
+  "version": "5.54.87",
+  "helpURI": "http://www.ebi.ac.uk/Tools/pfa/iprscan/",
+  "label": "InterProScan Sequence Search",
+  "defaultQueue": "skx-normal",
+  "defaultNodeCount": 1,
+  "defaultProcessorsPerNode": 48,
+  "defaultMaxRunTime": "24:00:00",
+  "maxHours":"24:00:00", 
+  "shortDescription": "InterProScan is a tool that combines different protein signature recognition methods into one resource.",
+  "executionSystem": "tacc-stampede2-wonaya",
+  "executionType": "HPC",
+  "parallelism": "PARALLEL",
+  "deploymentPath": "jawon/applications/interproscan-5.54-87.0",
+  "deploymentSystem": "data.iplantcollaborative.org",
+  "templatePath": "iprscan.bashx",
+  "testPath": "test.sh",
+  "tags": [
+    "Annotation",
+    "Protein functional analysis",
+    "EMBL-EBI"
+  ],
+  "modules": [
+    "purge",
+    "load TACC",
+    "load python3",
+    "load launcher",
+    "load tacc-singularity"
+  ],
+  "inputs": [
+    {
+      "id": "query",
+      "details": {
+        "label": "Fasta file containing all peptide sequences to annotate",
+        "description": "This file should contain no more than ~100,000 peptide sequences",
+        "showAttribute": false
+      },
+      "semantics": {
+        "minCardinality": 1,
+        "ontology": [
+          "http://sswapmeet.sswap.info/mime/application/X-fasta"
+        ],
+        "fileTypes": [
+          "fasta-0", "raw-0"
+        ]
+      },
+      "value": {
+        "default":"",
+        "order": 0,
+        "required": true,
+        "visible": true
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "id": "precalculated",
+      "details": {
+        "label": "Disable use of the precalculated match lookup service.  All match calculations will be run locally.",
+        "attribute": "-c",
+        "showAttribute": true
+      },
+      "semantics": {
+        "ontology": [
+          "xs:boolean"
+        ]
+      },
+      "value": {
+        "default": "false",
+        "order": 1,
+        "type": "flag",
+        "visible": true,
+        "required": false
+      }
+    },
+    {
+      "id": "lookup",
+      "details": {
+        "label": "Also include lookup of corresponding InterPro annotation in the TSV and GFF3 output formats",
+        "attribute": "-l",
+        "showAttribute": true
+      },
+      "semantics": {
+        "ontology": [
+          "xs:boolean"
+        ]
+      },
+      "value": {
+        "default": "false",
+        "order": 1,
+        "type": "flag",
+        "visible": true,
+        "required": false
+      }
+    },
+    {
+      "id": "goterms",
+      "details": {
+        "label": "Annotate each peptide with Gene Ontology information",
+        "attribute": "--goterms",
+        "showAttribute": true
+      },
+      "semantics": {
+        "ontology": [
+          "xs:boolean"
+        ]
+      },
+      "value": {
+        "default": "true",
+        "order": 1,
+        "type": "flag",
+        "visible": true,
+        "required": true
+      }
+    },
+    {
+      "id": "pathways",
+      "details": {
+        "label": "Annotate each peptide with biological pathway information",
+        "description": "--pathways",
+        "showAttribute": true
+      },
+      "semantics": {
+        "ontology": [
+          "xs:boolean"
+        ]
+      },
+      "value": {
+        "default": "true",
+        "order": 2,
+        "type": "flag",
+        "visible": true,
+        "required": true
+      }
+    },
+    {
+      "id": "outdir",
+      "details": {
+        "label": "Interproscan output directory name",
+        "showAttribute": true
+      },
+      "semantics": {
+        "ontology": [
+          "xs:string"
+        ]
+      },
+      "value": {
+        "default": "outdir",
+        "order": 5,
+        "type": "string",
+        "visible": true,
+        "required": true
+      }
+    },
+    {
+      "id": "database",
+      "details": {
+        "label": "Database",
+        "showAttribute": true
+      },
+      "semantics": {
+        "ontology": [
+          "xs:string"
+        ]
+      },
+      "value": {
+        "order": 2,
+        "type": "string",
+        "visible": true,
+        "required": false
+      }
+    },
+    {
+      "id": "taxon",
+      "details": {
+        "label": "Taxon ID",
+        "showAttribute": true
+      },
+      "semantics": {
+        "ontology": [
+          "xs:string"
+        ]
+      },
+      "value": {
+        "order": 2,
+        "type": "string",
+        "visible": true,
+        "required": false
+      }
+    },
+    {
+      "id": "biocurator",
+      "details": {
+        "label": "Biocurator",
+        "showAttribute": true
+      },
+      "semantics": {
+        "ontology": [
+          "xs:string"
+        ]
+      },
+      "value": {
+        "order": 2,
+        "type": "string",
+        "visible": true,
+        "required": false
+      }
+    }
+  ],
+  "outputs":[
+     {"id":"outdir",
+     "value":
+        {"default":"output",
+         "order":0,
+         "required":true,
+         "visible":true},
+     "details":
+        {"description":"",
+         "label":"Folder for output",
+         "argument":null,
+         "showArgument":false}}
+   ],
+   "checkpointable": true
+}

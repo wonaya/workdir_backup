@@ -1,0 +1,36 @@
+#!/bin/bash
+export MALLOC_ARENA_MAX=2
+
+OWD=$PWD
+
+IPRSCAN_VERSION=5.54-87.0
+
+# query is a X-multifasta
+query=${query}
+goterms=${goterms}
+pathways=${pathways}
+outdir=${outdir}
+database=${database}
+taxon=${taxon}
+biocurator=${biocurator}
+precalculated=${precalculated}
+lookup=${lookup}
+
+# args
+if [ "${precalculated}" == "true" ]; then ARGS="${ARGS} -c "; fi
+if [ "${lookup}" == "true" ]; then ARGS="${ARGS} -l "; fi
+if [ "${goterms}" == "true" ]; then ARGS="${ARGS} -g "; fi
+if [ "${pathways}" == "true" ]; then ARGS="${ARGS} -p "; fi
+if [ "${database}" != "" ]; then ARGS="${ARGS} -D ${database} "; fi
+if [ "${taxon}" != "" ] ; then ARGS="${ARGS} -x ${taxon} "; fi
+if [ "${biocurator}" != "" ] ; then ARGS="${ARGS} -n ${biocurator} "; fi
+ARGS=" -d ${outdir} -f tsv,json,xml,gff3 ${ARGS}"
+
+module purge
+module load TACC
+module load tacc-singularity/3.7.2 
+#module load launcher
+#export LD_PRELOAD=""
+echo "singularity run -B $PWD:/data -B /scratch/projects/tacc/bio/interproscan/interproscan-5.54-87.0/data:/opt/interproscan/data docker://agbase/interproscan:5.54-87  -i ${query} ${ARGS} -d outdir -D refseq "
+singularity run -B $PWD:/data -B /scratch/projects/tacc/bio/interproscan/interproscan-5.54-87.0/data:/opt/interproscan/data docker://agbase/interproscan:5.54-87  -i ${query} ${ARGS} -d outdir -D refseq
+#rm -Rf iprscan.bashx iprscan.json jawon-iprscan-job.ipcexe job-small.json test.sh

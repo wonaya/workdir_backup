@@ -1,0 +1,38 @@
+{
+    "appId": "Interproscan-5.33.72",
+    "archive": true,
+    "batchQueue": "skx-normal",
+    "inputs": {
+        "query": "agave://data.iplantcollaborative.org/shared/iplantcollaborative/example_data/interproscan/Bos_taurus.UMD3.1.pep.all.fa"
+    },
+    "maxRunTime": "06:00:00",
+    "name": "test-small",
+    "nodeCount": 15,
+    "owner": "jawon",
+    "parameters": {
+        "goterms": true,
+        "pathways": true
+    },
+    "processorsPerNode": 24,
+    "notifications": [{
+		"url": "http://requestbin.agaveapi.co/v0o851v0?job_id=${JOB_ID}&status=${JOB_STATUS}",
+		"event": "*",
+		"persistent": true
+	}, {
+		"url": "jawon@tacc.utexas.edu",
+		"event": "QUEUED",
+		"persistent": false
+	}, {
+		"url": "jawon@tacc.utexas.edu",
+		"event": "RUNNING",
+		"persistent": false
+	}, {
+		"url": "jawon@tacc.utexas.edu",
+		"event": "FINISHED",
+		"persistent": false
+	}, {
+		"url": "jawon@tacc.utexas.edu",
+		"event": "FAILED",
+		"persistent": false
+	}]
+}

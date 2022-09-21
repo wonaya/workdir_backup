@@ -1,0 +1,107 @@
+#!/bin/bash
+
+OWD=$PWD
+
+IPRSCAN_VERSION=5.35-74.0
+
+# Unpack bin directory
+tar -zxf bin.tgz
+PATH=${PATH}:${OWD}/bin
+# Deployed in the TACC scratch projects space dedicated to iPlant
+IPRSCAN="/scratch/projects/tacc/bio/interproscan/interproscan-$IPRSCAN_VERSION"
+PATH=${PATH}:${IPRSCAN}:${IPRSCAN}/bin
+
+# Hard coded
+RECORDS=500
+SPLIT="split_fasta"
+OUTDIR="output"
+PARAM="paramlist"
+
+# query is a X-multifasta
+query=${query}
+echo $query
+# args
+ARGS="--tempdir /tmp --formats tsv,gff3,xml --iprlookup ${goterms} ${pathways}"
+
+module purge
+module load TACC
+module load python3
+module load launcher
+
+rm -rf launcher.log
+echo "Splitting data..." >> launcher.log
+echo $(date) >> launcher.log
+
+mkdir -p ${OUTDIR}
+mkdir -p ${SPLIT}
+#splitfasta.pl -f "${query}" -o ${SPLIT} -s "seqfile" -r ${RECORDS}
+splitfasta.pl -f "${query}" -o ${SPLIT} -s "seqfile" -r 1000
+#splitfasta.pl -f "${query}" -o ${SPLIT} -s "seqfile" -r 500
+#echo "split fasta done"
+
+rm -rf "${PARAM}"
+for C in `find ${SPLIT} -size +0c -type f`; do
+    #LOG=${OUTDIR}/$(basename $C).log
+    echo "${IPRSCAN}/interproscan.sh ${ARGS} --output-dir ${OUTDIR} --input $C " >> "${PARAM}"
+    #echo "${IPRSCAN}/interproscan.sh ${ARGS} --output-dir ${OUTDIR} --input $C &> $LOG" >> ${PARAM}
+done
+echo "${PARAM}" ${ARGS} >> launcher.log
+echo $(date) >> launcher.log
+echo "Done" >> launcher.log
+
+N=$(cat $PARAM | wc -l)
+PPN=$(($N>50?50:$N))
+
+export LAUNCHER_PPN=$PPN
+export LAUNCHER_NHOSTS=1
+export LAUNCHER_PLUGIN_DIR=$LAUNCHER_DIR/plugins
+export LAUNCHER_JOB_FILE=paramlist
+export LAUNCHER_RMI=SLURM
+export LAUNCHER_SCHED=interleaved
+export LAUNCHER_WORKDIR=$PWD
+#echo $LAUNCHER_JOB_FILE
+echo $LAUNCHER_SCHED
+echo "Starting parallel job..." >> launcher.log
+echo $(date) >> launcher.log
+$LAUNCHER_DIR/paramrun
+
+echo $(date) >> launcher.log
+echo "Done" >> launcher.log
+
+# Consolidate results
+
+echo "Consolidating results..." >> launcher.log
+echo $(date) >> launcher.log
+
+rm -rf "${MFA_FILE}.reordered ${MFA_FILE}.tsv ${MFA_FILE}.gff3"
+# Create XML file
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > "$OWD/${MFA_FILE}.xml"
+
+for D in `find ${SPLIT} -size +0c -type f`; do
+    BN=$(basename $D)
+    for ext in {".xml",".tsv",".gff3",""}; do
+        IF=${OUTDIR}/${BN}${ext}
+        OF=${OWD}/${query}${ext}
+        [ -e $IF ] && grep -v "<\?xml" $IF >> $OF
+    done
+done
+
+#close xml bracket
+[ -e ${OUTDIR}/${BN}.xml ] && tail -n 1 ${OUTDIR}/${BN}.xml >> ${OWD}/${MFA_FILE}.xml
+
+echo $(date) >> launcher.log
+echo "Done" >> launcher.log
+
+# Clean up
+echo "Cleaning up temporary files..." >> launcher.log
+echo $(date) >> launcher.log
+
+for E in bin ${SPLIT} ${PARAM} ${MFA_FILE}
+#for E in bin ${SPLIT}
+do
+  echo "Deleting $E..."
+  rm -rf $E
+done
+
+echo $(date) >> launcher.log
+echo "Done" >> launcher.log
